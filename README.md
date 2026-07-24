@@ -50,4 +50,4 @@ GitHub:
 https://github.com/Jyothika2110
 
 LinkedIn:
-(Your LinkedIn Profile URL)
+[(Your LinkedIn Profile URL)](https://www.linkedin.com/in/busipoina-jyothika-761471253)
