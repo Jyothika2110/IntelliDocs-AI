@@ -1,24 +1,18 @@
 # 📄 IntelliDocs AI
 
-An AI-powered PDF Chatbot that allows users to upload PDF documents and interact with them using natural language. The application extracts text from PDFs and uses Google's Gemini AI to provide intelligent answers based on the uploaded document.
-
----
+An AI-powered PDF chatbot that allows users to upload documents and ask questions using Groq LLM.
 
 ## 🚀 Features
 
 - 📄 Upload PDF documents
-- 👀 PDF Preview
-- 🤖 Chat with uploaded PDF using Gemini AI
-- 💬 Chat History
-- 🔍 Search Previous Chats
-- 📄 Export Chat as PDF
+- 🤖 Chat with PDF using AI
+- 🔍 Search previous chats
+- 📑 PDF Preview
+- 🌙 Dark / Light Mode
+- 📤 Export Chat as PDF
 - 📝 Export Chat as TXT
 - 🗑 Delete Individual Chats
-- 🧹 Clear All Chats
-- 🌙 Dark / Light Mode
-- 📱 Responsive User Interface
-
----
+- 🧹 Clear Chat History
 
 ## 🛠 Tech Stack
 
@@ -27,79 +21,33 @@ An AI-powered PDF Chatbot that allows users to upload PDF documents and interact
 - TypeScript
 - Vite
 - Material UI
-- Axios
 
 ### Backend
 - Spring Boot
-- Spring Data JPA
+- Java
+- Spring Security
+- Apache PDFBox
+
+### Database
 - MySQL
-- PDFBox
-- Gemini API
 
----
+### AI
+- Groq LLM API
 
-## 📂 Project Structure
+## ▶️ Demo
 
-```
-IntelliDocs-AI
-│
-├── Frontend
-│   ├── React
-│   ├── TypeScript
-│   └── Vite
-│
-└── Backend
-    ├── Spring Boot
-    ├── MySQL
-    └── Gemini AI Integration
-```
+(Add your demo video here after uploading it.)
 
----
+## 📷 Screenshots
 
-## ⚙️ Installation
-
-### Backend
-
-```bash
-cd Backend/backend
-./mvnw spring-boot:run
-```
-
-### Frontend
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
----
-
-## 📸 Screenshots
-
-(Add screenshots here)
-
-- Upload PDF
-- PDF Preview
-- AI Chat
-- Dark Mode
-- Export Chat
-
----
-
-## 🌟 Future Enhancements
-
-- User Authentication (JWT)
-- Multiple PDF Management
-- AI Chat Titles
-- Voice Input
-- Chat Sharing
-- AI-generated PDF Summary
-
----
+(Add screenshots here.)
 
 ## 👩‍💻 Author
 
-**Busipoina Jyothika**
+**Jyothika**
 
-LinkedIn: https://linkedin.com/in/[YOUR_LINKEDIN](https://www.linkedin.com/in/busipoina-jyothika-761471253)
+GitHub:
+https://github.com/Jyothika2110
+
+LinkedIn:
+(Your LinkedIn Profile URL)
