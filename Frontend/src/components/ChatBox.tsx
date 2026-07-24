@@ -49,18 +49,14 @@ export default function ChatBox() {
 
             setLoading(true);
 
-            const response = await api.post("/ask", {
+            await api.post("/ask", {
                 question
             });
 
-            const newChat: Chat = {
-                question,
-                answer: response.data
-            };
-
-            setMessages(prev => [...prev, newChat]);
-
             setQuestion("");
+
+            // Reload chats from database so every chat has its ID
+            await fetchHistory();
 
         } catch (error) {
 
@@ -82,16 +78,12 @@ export default function ChatBox() {
 
             setLoading(true);
 
-            const response = await api.post("/ask", {
+            await api.post("/ask", {
                 question: text
             });
 
-            const newChat: Chat = {
-                question: text,
-                answer: response.data
-            };
-
-            setMessages(prev => [...prev, newChat]);
+            // Reload chats from database
+            await fetchHistory();
 
         } catch (error) {
 
@@ -105,321 +97,294 @@ export default function ChatBox() {
 
     };
 
+    // KEEP YOUR exportPDF() METHOD BELOW THIS
     const exportPDF = () => {
 
-        const pdf = new jsPDF();
+    const pdf = new jsPDF();
 
-        let y = 20;
+    let y = 20;
 
-        pdf.setFontSize(18);
-        pdf.text("IntelliDocs AI Chat", 20, y);
+    pdf.setFontSize(18);
+    pdf.text("IntelliDocs AI Chat", 20, y);
 
-        y += 20;
+    y += 20;
 
-        messages.forEach(chat => {
+    messages.forEach(chat => {
 
-            pdf.setFontSize(12);
+        pdf.setFontSize(12);
 
-            pdf.text("You:", 20, y);
-            y += 8;
+        pdf.text("You:", 20, y);
+        y += 8;
 
-            pdf.text(chat.question, 25, y);
-            y += 12;
+        pdf.text(chat.question, 25, y);
+        y += 12;
 
-            pdf.text("AI:", 20, y);
-            y += 8;
+        pdf.text("AI:", 20, y);
+        y += 8;
 
-            const lines = pdf.splitTextToSize(chat.answer, 160);
+        const lines = pdf.splitTextToSize(chat.answer, 160);
 
-            pdf.text(lines, 25, y);
+        pdf.text(lines, 25, y);
 
-            y += lines.length * 8 + 15;
+        y += lines.length * 8 + 15;
 
-            if (y > 260) {
-
-                pdf.addPage();
-
-                y = 20;
-
-            }
-
-        });
-
-        pdf.save("IntelliDocsChat.pdf");
-
-    };
-
-    const exportTXT = () => {
-
-        let content = "";
-
-        messages.forEach(chat => {
-
-            content += "You:\n";
-            content += chat.question + "\n\n";
-
-            content += "AI:\n";
-            content += chat.answer + "\n\n";
-
-            content += "---------------------------------------\n\n";
-
-        });
-
-        const blob = new Blob([content], {
-            type: "text/plain"
-        });
-
-        const link = document.createElement("a");
-
-        link.href = URL.createObjectURL(blob);
-
-        link.download = "IntelliDocsChat.txt";
-
-        link.click();
-
-    };
-
-    const deleteChat = async (id: number | undefined) => {
-
-        if (!id) return;
-
-        try {
-
-            await api.delete(`/history/${id}`);
-
-            setMessages(prev =>
-                prev.filter(chat => chat.id !== id)
-            );
-
-        } catch (error) {
-
-            console.log(error);
-
-            alert("Unable to delete chat.");
-
+        if (y > 260) {
+            pdf.addPage();
+            y = 20;
         }
 
-    };
+    });
 
-    const clearAllChats = async () => {
+    pdf.save("IntelliDocsChat.pdf");
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete all chats?"
-        );
+};
 
-        if (!confirmDelete) return;
+const exportTXT = () => {
 
-        try {
+    let content = "";
 
-            await api.delete("/history");
+    messages.forEach(chat => {
 
-            setMessages([]);
+        content += "You:\n";
+        content += chat.question + "\n\n";
 
-        } catch (error) {
+        content += "AI:\n";
+        content += chat.answer + "\n\n";
 
-            console.log(error);
+        content += "---------------------------------------\n\n";
 
-            alert("Unable to clear chats.");
+    });
 
-        }
+    const blob = new Blob([content], {
+        type: "text/plain"
+    });
 
-    };
-    return (
+    const link = document.createElement("a");
 
-    <div>
+    link.href = URL.createObjectURL(blob);
+    link.download = "IntelliDocsChat.txt";
+    link.click();
 
-        <h2 style={{ marginBottom: "20px" }}>
-            Chat with PDF
-        </h2>
+};
 
-        {/* Quick Buttons */}
+const deleteChat = async (id: number | undefined) => {
 
-        <div className="chat-input">
+    if (!id) return;
 
-            <button onClick={() => quickAsk("What is my CGPA?")}>
-                🎓 CGPA
-            </button>
+    try {
 
-            <button onClick={() => quickAsk("What are my skills?")}>
-                💻 Skills
-            </button>
+        await api.delete(`/history/${id}`);
 
-            <button onClick={() => quickAsk("Show my projects")}>
-                📂 Projects
-            </button>
+        await fetchHistory();
 
-            <button onClick={() => quickAsk("Tell me about my internship experience")}>
-                🏢 Internship
-            </button>
+    } catch (error) {
 
-        </div>
+        console.log(error);
 
-        <br />
+        alert("Unable to delete chat.");
 
-        {/* Export Buttons */}
+    }
 
-        <div
+};
+
+const clearAllChats = async () => {
+
+    const confirmDelete = window.confirm(
+        "Are you sure you want to delete all chats?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+        await api.delete("/history");
+
+        setMessages([]);
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert("Unable to clear chats.");
+
+    }
+
+};
+
+return (
+
+<div>
+
+    <h2 style={{ marginBottom: "20px" }}>
+        Chat with PDF
+    </h2>
+
+    <div className="chat-input">
+
+        <button onClick={() => quickAsk("What is my CGPA?")}>
+            🎓 CGPA
+        </button>
+
+        <button onClick={() => quickAsk("What are my skills?")}>
+            💻 Skills
+        </button>
+
+        <button onClick={() => quickAsk("Show my projects")}>
+            📂 Projects
+        </button>
+
+        <button onClick={() => quickAsk("Tell me about my internship experience")}>
+            🏢 Internship
+        </button>
+
+    </div>
+
+    <br />
+
+    <div
+        style={{
+            display: "flex",
+            gap: "10px",
+            marginBottom: "15px",
+            flexWrap: "wrap"
+        }}
+    >
+
+        <button onClick={exportPDF}>
+            📄 Export PDF
+        </button>
+
+        <button onClick={exportTXT}>
+            📝 Export TXT
+        </button>
+
+        <button
             style={{
-                display: "flex",
-                gap: "10px",
-                marginBottom: "15px",
-                flexWrap: "wrap"
+                background: "#dc3545",
+                color: "white"
             }}
+            onClick={clearAllChats}
         >
+            🧹 Clear All
+        </button>
 
-            <button onClick={exportPDF}>
-                📄 Export PDF
-            </button>
+    </div>
 
-            <button onClick={exportTXT}>
-                📝 Export TXT
-            </button>
+    <input
+        type="text"
+        placeholder="🔍 Search previous chats..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+            width: "100%",
+            padding: "12px",
+            marginBottom: "15px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            fontSize: "15px"
+        }}
+    />
 
-            <button
-                style={{
-                    background: "#dc3545",
-                    color: "white"
-                }}
-                onClick={clearAllChats}
-            >
-                🧹 Clear All
-            </button>
+    <div className="chat-window">
 
-        </div>
+        {messages.length === 0 ? (
 
-        {/* Search */}
+            <p>No chats yet.</p>
 
-        <input
-            type="text"
-            placeholder="🔍 Search previous chats..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-                width: "100%",
-                padding: "12px",
-                marginBottom: "15px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                fontSize: "15px"
-            }}
-        />
+        ) : (
 
-        {/* Chat Window */}
+            messages
+                .filter(chat =>
+                    chat.question.toLowerCase().includes(search.toLowerCase()) ||
+                    chat.answer.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((chat) => (
 
-        <div className="chat-window">
+                    <div key={chat.id}>
 
-            {messages.length === 0 ? (
+                        <ChatMessage
+                            sender="You"
+                            message={chat.question}
+                        />
 
-                <p>No chats yet.</p>
+                        <ChatMessage
+                            sender="AI"
+                            message={chat.answer}
+                        />
 
-            ) : (
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                                marginTop: "8px"
+                            }}
+                        >
 
-                messages
-                    .filter(chat =>
-                        chat.question
-                            .toLowerCase()
-                            .includes(search.toLowerCase()) ||
-
-                        chat.answer
-                            .toLowerCase()
-                            .includes(search.toLowerCase())
-                    )
-                    .map((chat, index) => (
-
-                        <div key={index}>
-
-                            <ChatMessage
-                                sender="🧑 You"
-                                message={chat.question}
-                            />
-
-                            <ChatMessage
-                                sender="🤖 IntelliDocs AI"
-                                message={chat.answer}
-                            />
-
-                            <div
+                            <button
                                 style={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                    marginTop: "8px"
+                                    background: "#dc3545",
+                                    color: "white"
                                 }}
+                                onClick={() => deleteChat(chat.id)}
                             >
-
-                                <button
-                                    style={{
-                                        background: "#dc3545",
-                                        color: "white"
-                                    }}
-                                    onClick={() => deleteChat(chat.id)}
-                                >
-                                    🗑 Delete
-                                </button>
-
-                            </div>
-
-                            <hr
-                                style={{
-                                    margin: "15px 0"
-                                }}
-                            />
+                                🗑 Delete
+                            </button>
 
                         </div>
 
-                    ))
+                        <hr style={{ margin: "15px 0" }} />
 
-            )}
+                    </div>
 
-            {loading && (
+                ))
 
-                <p>
-                    🤖 IntelliDocs AI is thinking...
-                </p>
+        )}
 
-            )}
+        {loading && (
+            <p>🤖 IntelliDocs AI is thinking...</p>
+        )}
 
-            <div ref={bottomRef}></div>
-
-        </div>
-                {/* Input */}
-
-        <div
-            style={{
-                display: "flex",
-                gap: "10px",
-                marginTop: "15px"
-            }}
-        >
-
-            <input
-                type="text"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Ask anything about your PDF..."
-                style={{
-                    flex: 1,
-                    padding: "12px",
-                    fontSize: "16px",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc"
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        askQuestion();
-                    }
-                }}
-            />
-
-            <button
-                onClick={askQuestion}
-                disabled={loading}
-            >
-                {loading ? "Thinking..." : "Send"}
-            </button>
-
-        </div>
+        <div ref={bottomRef}></div>
 
     </div>
+
+    <div
+        style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "15px"
+        }}
+    >
+
+        <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Ask anything about your PDF..."
+            style={{
+                flex: 1,
+                padding: "12px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                border: "1px solid #ccc"
+            }}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    askQuestion();
+                }
+            }}
+        />
+
+        <button
+            onClick={askQuestion}
+            disabled={loading}
+        >
+            {loading ? "Thinking..." : "Send"}
+        </button>
+
+    </div>
+
+</div>
 
 );
 

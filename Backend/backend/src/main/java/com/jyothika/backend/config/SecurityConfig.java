@@ -14,8 +14,9 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
+       http
+    .cors(Customizer.withDefaults())
+    .csrf(csrf -> csrf.disable())
 
                 .headers(headers ->
                         headers.frameOptions(frame -> frame.disable())
