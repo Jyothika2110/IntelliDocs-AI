@@ -36,11 +36,7 @@ An AI-powered PDF chatbot that allows users to upload documents and ask question
 
 ## ▶️ Demo
 
-(Add your demo video here after uploading it.)
-
-## 📷 Screenshots
-
-(Add screenshots here.)
+[(Add your demo video here after uploading it.)](https://github.com/Jyothika2110/IntelliDocs-AI)
 
 ## 👩‍💻 Author
 
