@@ -145,7 +145,7 @@ IntelliDocs-AI
 
 Demo Video:
 
-C:\Users\3410\Videos\Screen Recordings\demo.mp4
+Added IntelliDocs AI demo.zip
 
 ---
 
