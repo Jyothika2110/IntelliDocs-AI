@@ -145,7 +145,7 @@ IntelliDocs-AI
 
 Demo Video:
 
-Added IntelliDocs AI demo.zip
+[Added IntelliDocs AI demo.zip](https://github.com/Jyothika2110/IntelliDocs-AI/blob/main/Added%20IntelliDocs%20AI%20demo.zip)
 
 ---
 
