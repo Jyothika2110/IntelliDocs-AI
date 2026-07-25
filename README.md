@@ -141,25 +141,11 @@ IntelliDocs-AI
 
 ---
 
-## 📸 Application Screenshots
-
-> Add screenshots here after uploading them.
-
-Example:
-
-```
-screenshots/home.png
-screenshots/chat.png
-screenshots/export.png
-```
-
----
-
 ## ▶️ Demo Video
 
 Demo Video:
 
-(Add your demo video link here after uploading.)
+"C:\Users\3410\Videos\Screen Recordings\demo.mp4.mp4"
 
 ---
 
